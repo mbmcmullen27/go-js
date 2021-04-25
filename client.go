@@ -17,7 +17,7 @@ import (
 
 func configure() *kubernetes.Clientset {
 	fmt.Print("\nConfiguring...")
-	// var kubeconfig *string
+
 	array := js.Global().Get("kubeconfig")
 	buf := make([]byte, array.Get("length").Int())
 	js.CopyBytesToGo(buf, array)
@@ -25,7 +25,6 @@ func configure() *kubernetes.Clientset {
 	// fmt.Printf("%v",buf)
 
 	fmt.Print("\nCreate rest config from byte array...")
-	// config, err := clientcmd.Load(buf)
 	config, err := clientcmd.RESTConfigFromKubeConfig(buf)
 	if err != nil {
 		panic(err.Error())
@@ -40,12 +39,12 @@ func configure() *kubernetes.Clientset {
 }
 
 func main() {
-	fmt.Print("\ngetting those pods...")
 	clientset := configure()
+	fmt.Print("\nGetting those pods...")
 	pods, err := clientset.CoreV1().Pods("kube-system").List(context.TODO(), metav1.ListOptions{})
 
 	// fmt.Printf("%d\n",len(pods.Items))
-	fmt.Printf("%s\n", pods)
+	fmt.Printf("\n%s", pods)
 	
 	length := len(pods.Items)
 
@@ -56,7 +55,7 @@ func main() {
 
 		name:=pods.Items[i].ObjectMeta.Name
 		// data, _ := json.Marshal(pods.Items[i])
-		fmt.Printf("%s\n", name)
+		fmt.Printf("\n%s", name)
 		// fmt.Printf("%s\n", pods)
 
 	}
